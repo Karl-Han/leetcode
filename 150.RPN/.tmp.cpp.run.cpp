@@ -124,71 +124,110 @@ ostream& operator<<(ostream &os, const TreeNode *t) {
 }
 
 /*
- * [21] Merge Two Sorted Lists
+ * [150] Evaluate Reverse Polish Notation
  *
- * https://leetcode.com/problems/merge-two-sorted-lists/description/
+ * https://leetcode.com/problems/evaluate-reverse-polish-notation/description/
  *
  * algorithms
- * Easy (43.33%)
- * Total Accepted:    416.5K
- * Total Submissions: 961.2K
- * Testcase Example:  '[1,2,4]\n[1,3,4]'
+ * Medium (29.90%)
+ * Total Accepted:    134K
+ * Total Submissions: 445.5K
+ * Testcase Example:  '["2","1","+","3","*"]'
  *
- * Merge two sorted linked lists and return it as a new list. The new list
- * should be made by splicing together the nodes of the first two lists.
+ * Evaluate the value of an arithmetic expression in Reverse Polish Notation.
  * 
- * Example:
+ * Valid operators are +, -, *, /. Each operand may be an integer or another
+ * expression.
  * 
- * Input: 1->2->4, 1->3->4
- * Output: 1->1->2->3->4->4
+ * Note:
  * 
  * 
- */
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
- * };
+ * Division between two integers should truncate toward zero.
+ * The given RPN expression is always valid. That means the expression would
+ * always evaluate to a result and there won't be any divide by zero
+ * operation.
+ * 
+ * 
+ * Example 1:
+ * 
+ * 
+ * Input: ["2", "1", "+", "3", "*"]
+ * Output: 9
+ * Explanation: ((2 + 1) * 3) = 9
+ * 
+ * 
+ * Example 2:
+ * 
+ * 
+ * Input: ["4", "13", "5", "/", "+"]
+ * Output: 6
+ * Explanation: (4 + (13 / 5)) = 6
+ * 
+ * 
+ * Example 3:
+ * 
+ * 
+ * Input: ["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"]
+ * Output: 22
+ * Explanation: 
+ * ⁠ ((10 * (6 / ((9 + 3) * -11))) + 17) + 5
+ * = ((10 * (6 / (12 * -11))) + 17) + 5
+ * = ((10 * (6 / -132)) + 17) + 5
+ * = ((10 * 0) + 17) + 5
+ * = (0 + 17) + 5
+ * = 17 + 5
+ * = 22
+ * 
+ * 
  */
 class Solution {
 public:
-    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
-		ListNode *L = new ListNode(0);
-		ListNode *head = L;
-		if(l2 == NULL)
-			return l1;
-		if(l1 == NULL)
-			return l2;
-		do{
-			if(l1->val < l2->val){
-				L->next = l1;
-				l1 = l1->next;
-				L = L->next;
+    int evalRPN(vector<string>& tokens) {
+		stack<int> s;
+        int length = tokens.size();
+		for(int i = 0;i < length;i++){
+			if(tokens[i][0] >= 48){
+				cout<<tokens[i]<<endl;
+				int num = stoi(tokens[i]);
+				s.push(num);
 			}
 			else {
-				L->next = l2;
-				l2 = l2->next;
-				L = L->next;
+				char operatorr = (int)tokens[i][0];
+				int operand1 = s.top();
+				s.pop();
+				int operand2 = s.top();
+				switch(operatorr){
+					case '+':
+					{
+						s.push(operand1 + operand2);
+						break;
+					}
+					case '-':
+					{
+						s.push(operand1 - operand2);
+						break;
+					}
+					case '*':
+					{
+						s.push(operand1 * operand2);
+						break;
+					}
+					case '/':
+					{
+						s.push(operand1 / operand2);
+						break;
+					}
+				}
 			}
-			if(l1 == NULL){
-				L->next = l2;
-				return head->next;
-			}
-			if(l2 == NULL){
-				L->next = l1;
-				return head->next;
-			}
-		}while(1);
+		}
+		return s.top();
     }
 };
 
 int main() {
   Solution s;
-  decay<ListNode*>::type p0 = make_listnode({});
-  decay<ListNode*>::type p1 = make_listnode({});
-  auto res = s.mergeTwoLists(p0,p1);
+  decay<vector<string>&>::type p0 = {"2","1","+","3","*"};
+  auto res = s.evalRPN(p0);
   cout << res << endl;
   return 0;
 }

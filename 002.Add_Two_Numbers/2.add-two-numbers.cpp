@@ -36,42 +36,6 @@
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode *L = (ListNode*)malloc(sizeof(ListNode));
-		ListNode *head = L;
-		int num = 0;
-		int exp = 0;
-		int adder = 0;
-		do{
-			if(l1 == NULL){
-				while(l2){
-					num = l2->val + adder;
-					ListNode *newNode = (ListNode*)malloc(sizeof(ListNode));
-					if(num > 9){
-						num -= 10;
-						adder = 1;
-					}
-					newNode->val = num;
-					L->next = newNode;
-					l2 = l2->next;
-					return head->next;
-				}
-			}
-			if(l2 == NULL){
-				while(l1){
-					num = l1->val + adder;
-					ListNode *newNode = (ListNode*)malloc(sizeof(ListNode));
-					if(num > 9){
-						num -= 10;
-						adder = 1;
-					}
-					newNode->val = num;
-					L->next = newNode;
-					L = L->next;
-					l1 = l1->next;
-				}
-				return head->next;;
-			}
-			
-		}while(1);
+        
     }
 };
