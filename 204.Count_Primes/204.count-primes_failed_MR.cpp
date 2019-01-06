@@ -20,8 +20,9 @@
  * 
  * 
  */
+int nums[] = {2,3,5,7};
+// base^power % mod
 long int FastPowerMod(int mod, long base,long power){
-	//printf("base = %lu,power = %lu,mod = %lu\n",base,power,mod);
 	long res = 1;
 	base %= mod;
 	while(power > 0){
@@ -34,33 +35,32 @@ long int FastPowerMod(int mod, long base,long power){
 	//printf("res = %lu\n",res%mod);
 	return res;
 }
-bool passMullerRabin(int num,int testNum){
-	long d = (num-1)>>1;
-	while(!(d & 1))
-		d >>=1;
-	long int x = FastPowerMod(num,testNum,num-1);
-	if(x != 1)
-		return 0;
-	while(d != num-1){
+// testNum^num
+bool passMullerRabin(int num,int testNum,int odd){
+	long int x = FastPowerMod(num,testNum,odd);
+	if(x == 1 || x == num-1)
+		return 1;
+	while(odd != num-1){
 		x = (x * x) % num;
-		if(!(x == 1 || x == num-1))
-			return 0;
-		d <<=1;
+		odd <<=1;
+		if(x == num-1)
+			return 1;
 	}
-	return 1;
+	return 0;
 }
-bool isPrime(int num,int times){
+bool isPrime(int num){
 	if(num == 2)
 		return 1;
 	if(num == 1 ||!(num % 2))
 		return 0;
-	srand(time(NULL));
-	//for(int i = 0; i < times && num > test[i];i++)
-	//	if(!passMullerRabin(num,test[i]))
-	//		return 0;
-	for(int i = 0;i < times;i++){
-		int test = rand() % num;
-		if(!passMullerRabin(num,test))
+	int odd = (num-1)>>1;
+	while(!(odd & 1))
+		odd >>=1;
+	for(int i = 0;i < 4;i++){
+		if(num == nums[i]){
+			return 1;
+		}
+		if(!passMullerRabin(num,nums[i],odd) || num < nums[i])
 			return 0;
 	}
 	return 1;
@@ -70,7 +70,7 @@ public:
     int countPrimes(int n) {
 		int count = 0;
         for(int i = 1;i < n;i++){
-			if(isPrime(i,20)){
+			if(isPrime(i)){
 				count++;
 			}
 		}
